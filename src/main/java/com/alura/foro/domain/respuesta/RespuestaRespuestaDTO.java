@@ -1,7 +1,9 @@
 package com.alura.foro.domain.respuesta;
 
-public record RespuestaRespuestaDTO(Long id, String autor, String respuesta, Boolean estado) {
+import java.time.LocalDateTime;
+
+public record RespuestaRespuestaDTO(Long id, String autor, String respuesta, LocalDateTime fecha, Boolean estado) {
     public RespuestaRespuestaDTO(Respuesta respuesta){
-        this(respuesta.getId() ,respuesta.getAutor(), respuesta.getRespuesta(), respuesta.getEstado());
+        this(respuesta.getId() ,respuesta.getAutor(), respuesta.getRespuesta(), respuesta.getFechaCreacion(), respuesta.getEstado());
     }
 }

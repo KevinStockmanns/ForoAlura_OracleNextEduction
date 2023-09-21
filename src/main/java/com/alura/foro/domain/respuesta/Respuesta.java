@@ -49,4 +49,15 @@ public class Respuesta {
         this.estado = true;
         this.topico = topico;
     }
+
+
+    public void actualizar(@Valid ActualizarRespuestaDTO datos) {
+        if(datos.respuesta() != null)
+            this.respuesta = datos.respuesta();
+    }
+
+
+    public void desactivar() {
+        this.estado = false;
+    }
 }
