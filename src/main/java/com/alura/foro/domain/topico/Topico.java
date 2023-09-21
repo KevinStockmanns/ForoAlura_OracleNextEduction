@@ -1,18 +1,22 @@
 package com.alura.foro.domain.topico;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.alura.foro.domain.respuesta.Respuesta;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity(name = "Topico")
 @Table(name = "topicos")
@@ -41,6 +45,9 @@ public class Topico {
     
     @Column(name = "curso")
     private String curso;
+
+    @OneToMany(mappedBy = "topico")
+    private List<Respuesta> respuestas;
 
 
     public Topico(@Valid RegistroTopicoDTO datos) {

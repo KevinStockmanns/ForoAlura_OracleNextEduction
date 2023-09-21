@@ -1,6 +1,8 @@
 package com.alura.foro.controller;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.alura.foro.domain.respuesta.RespuestaRespuestaDTO;
 import com.alura.foro.domain.topico.ActualizarTopicoDTO;
+import com.alura.foro.domain.topico.DetallesTopicoConRespuestaDTO;
+import com.alura.foro.domain.topico.DetallesTopicoDTO;
 import com.alura.foro.domain.topico.ListadoTopicoDTO;
 import com.alura.foro.domain.topico.RegistroTopicoDTO;
 import com.alura.foro.domain.topico.RespuestaTopicoDTO;
@@ -68,9 +73,19 @@ public class TopicoController{
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ListadoTopicoDTO> mostrarTopico(@PathVariable Long id){
+    public ResponseEntity<?> mostrarTopico(@PathVariable Long id, @RequestParam(defaultValue = "false") Boolean withRes, @RequestParam(defaultValue = "false") Boolean allRes){
         Topico topico = topicoRepository.getReferenceById(id);
-        return ResponseEntity.ok(new ListadoTopicoDTO(topico));
+        if(withRes){
+            List<RespuestaRespuestaDTO> respDTO = topico.getRespuestas()
+                .stream()
+                .filter(resp -> (allRes || resp.getEstado()))
+                .map(respuesta -> new RespuestaRespuestaDTO(respuesta))
+                .collect(Collectors.toList());
+            
+            return ResponseEntity.ok(new DetallesTopicoConRespuestaDTO(topico, respDTO));
+        }else{
+            return ResponseEntity.ok(new DetallesTopicoDTO(topico));
+        }
     }
 
     @PutMapping("/{id}") @Transactional
